@@ -2,16 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: pricelist-app
-  namespace: argocd
+  namespace: openshift-gitops
 spec:
   destination:
-    namespace: argocd
+    namespace: openshift-gitops
     server: https://kubernetes.default.svc
   project: default
   source:
     path: app-of-apps/apps
-    repoURL: https://github.com/christianh814/gitops-examples
-    targetRevision: main
+    repoURL: https://github.com/keithchong/gitops-examples
+    targetRevision: master
   syncPolicy:
     automated:
       prune: true
