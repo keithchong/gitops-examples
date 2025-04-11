@@ -2,20 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: bgd
-  namespace: openshift-gitops
 spec:
   generators:
-  - list:
-      elements:
-      - cluster: cluster1
-        url: https://api.cluster1.chx.osecloud.com:6443
-      - cluster: cluster2
-        url: https://api.cluster2.chx.osecloud.com:6443
-      - cluster: cluster3
-        url: https://api.cluster3.chx.osecloud.com:6443
+  - git:
+      repoURL: https://github.com/christianh814/gitops-examples
+      revision: main
+      files:
+      - path: "applicationsets/git-generator/cluster-config/cluster-yaml/config.yaml"
   template:
     metadata:
-      name: '{{cluster}}-bgd'
+      name: '{{cluster.name}}-bgd'
     spec:
       project: default
       syncPolicy:
@@ -31,7 +27,7 @@ spec:
       source:
         repoURL: https://github.com/christianh814/gitops-examples
         targetRevision: main
-        path: applicationsets/list-generator/v0.1/overlays/{{cluster}}
+        path: 'applicationsets/git-generator/overlays/{{cluster.overlay}}'
       destination:
-        server: '{{url}}'
+        name: '{{cluster.server}}'
         namespace: bgd
